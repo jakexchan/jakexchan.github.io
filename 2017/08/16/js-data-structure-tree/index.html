@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="树树是由n(n&amp;gt;0)个有限节点组成一个具有层次关系的集合, 它具有以下特点:  每个节点有零个或多个子节点 没有父节点的节点叫做根节点 每个非根节点有且只有一个父节点 除了根结点外, 每个子节点可以分为多个不相交的子树   节点的度: 节点拥有的子树个树, 例如图中的节点A的度为2, 节点H的度为1 树的度: 树的最大节点的度, 例如图中最大的节点B的度为3, 树的度为3 叶节点: 度为0的">
+<meta name="keywords" content="JavaScript,Data Structure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS实现数据结构-树">
+<meta property="og:url" content="http://yoursite.com/2017/08/16/js-data-structure-tree/index.html">
+<meta property="og:site_name" content="jakexchan">
+<meta property="og:description" content="树树是由n(n&amp;gt;0)个有限节点组成一个具有层次关系的集合, 它具有以下特点:  每个节点有零个或多个子节点 没有父节点的节点叫做根节点 每个非根节点有且只有一个父节点 除了根结点外, 每个子节点可以分为多个不相交的子树   节点的度: 节点拥有的子树个树, 例如图中的节点A的度为2, 节点H的度为1 树的度: 树的最大节点的度, 例如图中最大的节点B的度为3, 树的度为3 叶节点: 度为0的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2017/08/16/js-data-structure-tree/Treedatastructure.png">
+<meta property="og:image" content="http://yoursite.com/2017/08/16/js-data-structure-tree/binary-tree-print.png">
+<meta property="og:updated_time" content="2018-10-25T16:55:38.086Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JS实现数据结构-树">
+<meta name="twitter:description" content="树树是由n(n&amp;gt;0)个有限节点组成一个具有层次关系的集合, 它具有以下特点:  每个节点有零个或多个子节点 没有父节点的节点叫做根节点 每个非根节点有且只有一个父节点 除了根结点外, 每个子节点可以分为多个不相交的子树   节点的度: 节点拥有的子树个树, 例如图中的节点A的度为2, 节点H的度为1 树的度: 树的最大节点的度, 例如图中最大的节点B的度为3, 树的度为3 叶节点: 度为0的">
+<meta name="twitter:image" content="http://yoursite.com/2017/08/16/js-data-structure-tree/Treedatastructure.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/16/js-data-structure-tree/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>JS实现数据结构-树 | jakexchan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jakexchan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Web developer</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/js-data-structure-tree/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jakexchan">
+      <meta itemprop="description" content="Life.code(" awesome")"="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jakexchan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JS实现数据结构-树
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-08-16 19:46:29" itemprop="dateCreated datePublished" datetime="2017-08-16T19:46:29+08:00">2017-08-16</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2018-10-26 00:55:38" itemprop="dateModified" datetime="2018-10-26T00:55:38+08:00">2018-10-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="树"><a href="#树" class="headerlink" title="树"></a>树</h1><p>树是由n(n&gt;0)个有限节点组成一个具有层次关系的集合, 它具有以下特点:</p>
+<ul>
+<li>每个节点有零个或多个子节点</li>
+<li>没有父节点的节点叫做根节点</li>
+<li>每个非根节点有且只有一个父节点</li>
+<li>除了根结点外, 每个子节点可以分为多个不相交的子树</li>
+</ul>
+<p><img src="/2017/08/16/js-data-structure-tree/Treedatastructure.png" alt="树"></p>
+<p><strong>节点的度:</strong> 节点拥有的子树个树, 例如图中的节点A的度为2, 节点H的度为1</p>
+<p><strong>树的度:</strong> 树的最大节点的度, 例如图中最大的节点B的度为3, 树的度为3</p>
+<p><strong>叶节点:</strong> 度为0的节点, 图中K,J,F,L,O,P都是叶节点</p>
+<p><strong>父节点:</strong> 一个含有子节点的节点, 图中节点A就是节点B和节点C的父节点</p>
+<p><strong>子节点:</strong> 一个含有子树的根节点的节点, 把子树的根节点叫做该节点的子节点, 图中节点G和节点H为节点C的子节点</p>
+<p><strong>兄弟节点:</strong> 具有相同父节点的节点, 节点B和节点C就是兄弟节点</p>
+<p><strong>祖先节点:</strong> 从根到该节点所经分支的所有节点, 图中节点A,B,E是节点J的祖先节点</p>
+<p><strong>子孙节点:</strong> 以某节点为根结点的子树中所有节点, 图中节点D,E,F,I,J,K是节点B的子孙节点</p>
+<p><strong>节点层次:</strong> 从根开始, 根为第1层, 根的子节点为第2层…如果一个节点在第n层, 则它的子树的根结点在n+1层</p>
+<p><strong>深度或高度:</strong> 树中节点的最大层次, 例如图中的深度为5</p>
+<p><strong>森林:</strong> 由n颗互不相交的树的集合, 例如图中节点A去掉, 以节点B为根的树和以节点C为根的树组成的集合就叫做森林</p>
+<a id="more"></a>
+<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p>二叉树是每个节点最多只有两个子树的树结构, 这两种子树通常叫做左子树和右子树, 具有左右次序, 不能颠倒</p>
+<p>二叉树的特点:</p>
+<ul>
+<li><p>二叉树的第i层至多有2^(i-1)个节点(i&gt;=1)</p>
+</li>
+<li><p>高度为h的二叉树至多有2^k-1个节点(h&gt;=1)</p>
+</li>
+<li><p>非空二叉树中, 叶子节点树为n0, 分支度为2的节点数为n2, 则 <code>n0 = n2 + 1</code></p>
+</li>
+<li><p>一颗高度为h且有2^k-1个节点的二叉树称为 <strong>满二叉树</strong></p>
+</li>
+<li><p>高度为k, 有n个节点的二叉树, 当且仅当每个节点都可以和同高度的满二叉树, 序号为1到n一一对应时, 称为　<strong>完全二叉树</strong></p>
+</li>
+</ul>
+<p>二叉树典型用法是对节点定义一个标记函数, 将一些值与每个节点相关系, 这样标记的二叉树可以实现 <strong>二叉搜索树</strong> 和 <strong>二元堆积</strong> , 应用于高效率的搜索和排序</p>
+<h3 id="实现二叉搜索树"><a href="#实现二叉搜索树" class="headerlink" title="实现二叉搜索树"></a>实现二叉搜索树</h3><p>二叉搜索树有以下性质:</p>
+<ul>
+<li><p>若任意节点的左子树不为空, 则左子树上所有节点的值都小于它的根节点的值</p>
+</li>
+<li><p>若任意节点的右子树不为空, 则右子树上所有节点的值都大于它的根节点的值</p>
+</li>
+<li><p>任意节点的左右子树也分别为二叉搜索树</p>
+</li>
+<li><p>没有值相等的节点</p>
+</li>
+</ul>
+<h4 id="定义节点类和二叉树类"><a href="#定义节点类和二叉树类" class="headerlink" title="定义节点类和二叉树类"></a>定义节点类和二叉树类</h4><p>由二叉树的定义, 我们可以对节点定义代表存储左子树和右子树的属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Node</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.data = data;</span><br><span class="line">  <span class="keyword">this</span>.leftChild = <span class="literal">null</span>;</span><br><span class="line">  <span class="keyword">this</span>.rightChild = <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对二叉树来说, 定义一个根节点的属性</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">BinaryTree</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.root = <span class="literal">null</span>;  <span class="comment">// 根结点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例如下图是Node环境下输出的二叉树结构, 一个对象嵌套着一个对象</p>
+<p><img src="/2017/08/16/js-data-structure-tree/binary-tree-print.png" alt="binary-tree-print"></p>
+<h4 id="插入节点"><a href="#插入节点" class="headerlink" title="插入节点"></a>插入节点</h4><p>由二叉搜索树的性质, 可以得到插入的过程:</p>
+<ul>
+<li>二叉树为空, 新节点为根节点</li>
+<li>二叉树不为空, 由根结点开始, 新节点的值小于当前节点, 往左子树递归, 若大于当前节点, 往右子树递归, 直到为<code>null</code>的时候插入</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * @param  &#123;object&#125; node 当前节点对象</span></span><br><span class="line"><span class="comment"> * @param  &#123;string&#125; childName 构造函数Node中子树属性名称</span></span><br><span class="line"><span class="comment"> * @param  &#123;object&#125; newNode 新节点对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> insertChild = <span class="function"><span class="keyword">function</span>(<span class="params">node, childName, newNode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (node[childName] === <span class="literal">null</span>) &#123;</span><br><span class="line">    node[childName] = newNode;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    insert(node[childName], newNode);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 插入操作</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * @param  &#123;object&#125; node 当前节点对象</span></span><br><span class="line"><span class="comment"> * @param  &#123;object&#125; newNode 新节点对象</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> insert = <span class="function"><span class="keyword">function</span>(<span class="params">node, newNode</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (newNode.data &lt; node.data) &#123;</span><br><span class="line">    insertChild(node, <span class="string">'leftChild'</span>, newNode);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    insertChild(node, <span class="string">'right'</span>, newNode);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 二叉搜索树插入新节点调用方法</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * @param  &#123;number&#125; data 新节点的数值</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">BinaryTree.prototype.inserNode = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> newNode = <span class="keyword">new</span> Node(data);  <span class="comment">// 构造Node的实例</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.root === <span class="literal">null</span>) &#123;  <span class="comment">// 根节点为空, 新节点为根节点</span></span><br><span class="line">    <span class="keyword">this</span>.root = newNode;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    insert(<span class="keyword">this</span>.root, newNode);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="判断空树"><a href="#判断空树" class="headerlink" title="判断空树"></a>判断空树</h4><p>判断是否是空树很简单, 当<code>root</code>为<code>null</code>时, 树就是空树, 返回<code>true</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">BinaryTree.prototype.isBinaryTreeEmpty = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.root) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="二叉搜索树的高度-深度"><a href="#二叉搜索树的高度-深度" class="headerlink" title="二叉搜索树的高度(深度)"></a>二叉搜索树的高度(深度)</h4><p>高度是树的最大层次, 可以用递归的方式, 分别计算左子树的高度和右子树的方式, 然后取它们之间最大值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> treeDepth = <span class="function"><span class="keyword">function</span>(<span class="params">node</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> i, j;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (node === <span class="literal">null</span>) &#123;  <span class="comment">// 空树, 高度为0</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (node.leftChild) &#123;  <span class="comment">// 计算左子树高度i</span></span><br><span class="line">    i = treeDepth(node.leftChild);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    i = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (node.rightChild) &#123;  <span class="comment">// 计算右子树高度j</span></span><br><span class="line">    j = treeDepth(node.rightChild);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    j = <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> i &gt; j ? i+<span class="number">1</span> : j+<span class="number">1</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 返回二叉搜索树高度的调用方法</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">BinaryTree.prototype.binaryTreeDepth = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> treeDepth(<span class="keyword">this</span>.root);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h4><p>遍历分为深度优先遍历和广度优先遍历, 其中先序,中序,后序遍历属于深度优先遍历的特例, 这里暂时采用了递归方式实现(非递归算法可借助栈实现), 在二叉树中, 广度优先遍历又称为层次遍历, 这里采用了队列实现</p>
+<h5 id="先序遍历"><a href="#先序遍历" class="headerlink" title="先序遍历"></a>先序遍历</h5><p>先序遍历的过程: 先访问根节点, 其次左子树, 最后右子树</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> preOrderTraverseNode = <span class="function"><span class="keyword">function</span>(<span class="params">node, callback</span>) </span>&#123;</span><br><span class="line">  checkCallback(callback);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (node) &#123;</span><br><span class="line">    callback(node);</span><br><span class="line">    preOrderTraverseNode(node.leftChild, callback);</span><br><span class="line">    preOrderTraverseNode(node.rightChild, callback);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">BinaryTree.prototype.preOrderTraverse = <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">  preOrderTraverseNode(<span class="keyword">this</span>.root, callback);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>checkCallback(callback)</code>是检查callback参数是否为函数的方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> checkCallback = <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!callback || <span class="keyword">typeof</span> callback !== <span class="string">'function'</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> (<span class="string">'Callback function error.'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h5 id="中序遍历"><a href="#中序遍历" class="headerlink" title="中序遍历"></a>中序遍历</h5><p>先序遍历的过程: 先访问左子树, 其次根节点, 最后右子树</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> inOrderTraverseNode = <span class="function"><span class="keyword">function</span>(<span class="params">node, callback</span>) </span>&#123;</span><br><span class="line">  checkCallback(callback);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (node) &#123;</span><br><span class="line">    inOrderTraverseNode(node.leftChild, callback);</span><br><span class="line">    callback(node);</span><br><span class="line">    inOrderTraverseNode(node.rightChild, callback);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">BinaryTree.prototype.inOrderTraverse = <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">  inOrderTraverseNode(<span class="keyword">this</span>.root, callback);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h5 id="后序遍历"><a href="#后序遍历" class="headerlink" title="后序遍历"></a>后序遍历</h5><p>先序遍历的过程: 先访问左子树, 其次根节点, 最后右子树</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> postOrderTraverseNode = <span class="function"><span class="keyword">function</span>(<span class="params">node, callback</span>) </span>&#123;</span><br><span class="line">  checkCallback(callback);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (node) &#123;</span><br><span class="line">    postOrderTraverseNode(node.leftChild, callback);</span><br><span class="line">    postOrderTraverseNode(node.rightChild, callback);</span><br><span class="line">    callback(node);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">BinaryTree.prototype.postOrderTraverse = <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">  postOrderTraverseNode(<span class="keyword">this</span>.root, callback);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h5 id="层次遍历-广度优先遍历"><a href="#层次遍历-广度优先遍历" class="headerlink" title="层次遍历(广度优先遍历)"></a>层次遍历(广度优先遍历)</h5><p>层次遍历指的是同深度节点从左到右依次遍历, 借助队列, 从根节点开始, 入列, 判断队列是否为空, 若不为空, 队首出列, 将队首的左右子树根节点入列, 不断循环直至队列的元素全部出列</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">BinaryTree.prototype.levelOrderTraverse = <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> queue = [],</span><br><span class="line">      e = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">  checkCallback(callback);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.root) &#123;</span><br><span class="line">    queue.push(<span class="keyword">this</span>.root);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(queue.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      e = queue.shift();</span><br><span class="line">      callback(e);</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">if</span> (e.leftChild) &#123;</span><br><span class="line">        queue.push(e.leftChild);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (e.rightChild) &#123;</span><br><span class="line">        queue.push(e.rightChild);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>这里主要简单地记录了实现一颗二叉搜索树的过程, 树结构的应用范围很广, 还有很多地内容并没有在这里提及, 在接下来的学习和工作当中, 再继续补充这一部分的内容, 本文所有实现的代码可以从Github中<a href="https://github.com/kabessC/data-structure-js/blob/master/tree/binary-tree.js" target="_blank" rel="noopener">查看</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/Data-Structure/" rel="tag"># Data Structure</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/13/sort/" rel="next" title="常用的排序算法">
+                <i class="fa fa-chevron-left"></i> 常用的排序算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/19/execution-context/" rel="prev" title="执行环境与作用域">
+                执行环境与作用域 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">jakexchan</p>
+              <p class="site-description motion-element" itemprop="description">Life.code("awesome")</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">2</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/jakexchan" target="_blank" title="Github"><i class="fa fa-fw fa-globe"></i>Github</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#树"><span class="nav-number">1.</span> <span class="nav-text">树</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树"><span class="nav-number">1.1.</span> <span class="nav-text">二叉树</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实现二叉搜索树"><span class="nav-number">1.1.1.</span> <span class="nav-text">实现二叉搜索树</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义节点类和二叉树类"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">定义节点类和二叉树类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#插入节点"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">插入节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判断空树"><span class="nav-number">1.1.1.3.</span> <span class="nav-text">判断空树</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二叉搜索树的高度-深度"><span class="nav-number">1.1.1.4.</span> <span class="nav-text">二叉搜索树的高度(深度)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#遍历"><span class="nav-number">1.1.1.5.</span> <span class="nav-text">遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#先序遍历"><span class="nav-number">1.1.1.5.1.</span> <span class="nav-text">先序遍历</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#中序遍历"><span class="nav-number">1.1.1.5.2.</span> <span class="nav-text">中序遍历</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#后序遍历"><span class="nav-number">1.1.1.5.3.</span> <span class="nav-text">后序遍历</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#层次遍历-广度优先遍历"><span class="nav-number">1.1.1.5.4.</span> <span class="nav-text">层次遍历(广度优先遍历)</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结尾"><span class="nav-number">1.2.</span> <span class="nav-text">结尾</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jakexchan</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Muse</a> v6.4.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
