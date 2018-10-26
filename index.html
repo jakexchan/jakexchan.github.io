@@ -291,7 +291,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -332,7 +332,7 @@
                 
               
 
-              <time title="Created: 2018-10-26 01:01:34 / Modified: 01:08:24" itemprop="dateCreated datePublished" datetime="2018-10-26T01:01:34+08:00">2018-10-26</time>
+              <time title="Created: 2018-10-26 01:01:34 / Modified: 19:18:49" itemprop="dateCreated datePublished" datetime="2018-10-26T01:01:34+08:00">2018-10-26</time>
             
 
             
@@ -389,8 +389,7 @@
 
       
         
-          
-            <p>vue-router 默认是 hash 模式，在 url 后面会有一个 # 号，在一些情况下，因为 # 号的原因，会让后面的 uri 丢失导致 url 跳转出现问题(比如在微信内跳转异常)。这时候可以使用 history 模式，取缔 # 号，这时候需要在服务器进行配置。</p>
+          <p>vue-router 默认是 hash 模式，在 url 后面会有一个 # 号，在一些情况下，因为 # 号的原因，会让后面的 uri 丢失导致 url 跳转出现问题(比如在微信内跳转异常)。这时候可以使用 history 模式，取缔 # 号，这时候需要在服务器进行配置。</p>
 <h2 id="nginx-的一些知识点"><a href="#nginx-的一些知识点" class="headerlink" title="nginx 的一些知识点"></a>nginx 的一些知识点</h2><h3 id="location"><a href="#location" class="headerlink" title="location"></a>location</h3><p>语法规则：location [=|~|~*|^~|@] pattern { … }</p>
 <ul>
 <li>= 开头表示精确匹配</li>
@@ -402,34 +401,15 @@
 <h3 id="root"><a href="#root" class="headerlink" title="root"></a>root</h3><p>根路径配置，在匹配到 location 的 uri 路径后，指向 root 配置的路径，并把 uri 路径加在 root 路径后面。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location /mc/ &#123;</span><br><span class="line">    root /home/mine/files/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>当我访问 <code>http://[host]/mc/test.png</code> 时，实际上返回的文件路径为 <code>/home/mine/files/mc/test.png</code></p>
-<h3 id="alias"><a href="#alias" class="headerlink" title="alias"></a>alias</h3><p>别名配置，在匹配到 location 的 uri 路径后，指向 alias 配置的路径</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location /mc/ &#123;</span><br><span class="line">    alias /home/mine/files/;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当我访问 <code>http://[host]/mc/test.png</code> 时，实际上返回的文件路径为 <code>/home/mine/files/test.png</code></p>
-<h3 id="try-files"><a href="#try-files" class="headerlink" title="try_files"></a>try_files</h3><p>try_file 的作用类似与重定向</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location /mc/ &#123;</span><br><span class="line">    alias /home/mine/files/;</span><br><span class="line">    try_files $uri $uri/ /mc/index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>当访问 <code>http://[host]/mc/example</code>时，try_files 首先会在 <code>/home/mine/files/</code> 目录下找是否有 <code>example</code> 这个文件，有则返回，未找到则找是否有 <code>example</code> 这个目录，有则返回，未找到则发起一个服务器内部发起重定向请求到 <code>http://localhost/mc/index.html</code> </p>
-<h2 id="Vue-Router配置"><a href="#Vue-Router配置" class="headerlink" title="Vue Router配置"></a>Vue Router配置</h2><p>当设置了 <code>mode</code> 为 <code>history</code> 时，Vue Router 有一个 <code>base</code> 的配置，假如 SPA 放入在一个 <code>[host]/mc/</code> 服务下时，可以将 <code>base</code> 设置为 <code>/mc/</code></p>
-<p>此时 nginx 的配置可以更新为：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location /mc &#123;</span><br><span class="line">    alias /home/mine/files;</span><br><span class="line">    index inde.html;</span><br><span class="line">    try_files $uri $uri/ /mc/index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>将打包之后的代码放入 <code>/home/mine/files</code> 根目录下。</p>
-<p>假如我需要保留访问 <code>[host]/mc/</code> 下的静态资源（比如图片），同时由多个 SPA 应用部署在 <code>/mc/</code> 下进行访问。</p>
-<p>首先，有一个 A 应用（<code>[host]/mc/a</code>），B 应用（<code>[host]/mc/b</code>）。</p>
-<ul>
-<li>将 <code>mode</code> 设置为 <code>history</code></li>
-<li>将 A 应用 <code>base</code> 设置为 <code>/mc/a/</code>，打包后把代码放入 <code>/home/mine/files/a/</code> 下</li>
-<li>将 B 应用 <code>base</code> 设置为 <code>/mc/b/</code>，打包后把代码放入 <code>/home/mine/files/b/</code> 下</li>
-<li>创建文件夹 <code>/home/mine/files/mc/</code>，用于放置其他静态资源</li>
-</ul>
-<p>更新 nginx 配置：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">location /mc/ &#123;</span><br><span class="line">    root /home/mine/files/;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ^~ /mc/a &#123;</span><br><span class="line">    alias /home/mine/files/a;</span><br><span class="line">    index index.html;</span><br><span class="line">    try_files $uri $uri/ /mc/a/index.html;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">location ^~ /mc/b &#123;</span><br><span class="line">    alias /home/mine/files/b;</span><br><span class="line">    index index.html;</span><br><span class="line">    try_files $uri $uri/ /mc/b/index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>此时</p>
-<ul>
-<li>访问 <code>[host]/mc/test.png</code>，实际上的文件路径为 <code>/home/mine/files/mc/test.png</code></li>
-<li>访问 <code>[host]/mc/a</code>，实际上访问了 A 应用的根路由</li>
-<li>访问 <code>[host]/mc/b</code>，实际上访问了 B 应用的根路由</li>
-</ul>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2018/10/26/vue-router-history-and-nginx/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+         
+          <!--/noindex-->
         
       
     </div>
@@ -486,7 +466,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -674,7 +654,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -732,7 +712,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2018-10-26 00:55:38" itemprop="dateModified" datetime="2018-10-26T00:55:38+08:00">2018-10-26</time>
+                <time title="Modified: 2018-10-26 19:19:36" itemprop="dateModified" datetime="2018-10-26T19:19:36+08:00">2018-10-26</time>
               
             
           </span>
@@ -796,8 +776,6 @@
 <h2 id="函数调用栈"><a href="#函数调用栈" class="headerlink" title="函数调用栈"></a>函数调用栈</h2><p>当一个函数执行时, 函数执行环境进入 <strong>函数调用栈(call stack, 也可以叫做环境栈)</strong>, 函数执行完成后, 调用栈将其执行环境弹出, 把控制权交回给之前的执行环境. 因此, 在函数调用栈中, 栈底是全局环境, 栈顶是当前执行环境.</p>
 <p>下面用红宝书里的例子和图示演示这个过程:</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> color = <span class="string">'blue'</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">changeColor</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (color === <span class="string">'blue'</span>) &#123;</span><br><span class="line">    color = <span class="string">'red'</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    color = <span class="string">'blue'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">changeColor();</span><br></pre></td></tr></table></figure>
-<p><img src="/2017/08/19/execution-context/execution-context-stack.png" alt="execution-context-stack"></p>
-<h2 id="执行环境详解"><a href="#执行环境详解" class="headerlink" title="执行环境详解"></a>执行环境详解</h2><p>从上面可以知道, 当一个函数开始执行时, 将会创建一个新的执行环境. 在JavaScript解释器中, 调用一个执行环境会有两个阶段:</p>
           <!--noindex-->
           
             <div class="post-button text-center">
@@ -863,7 +841,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -1057,7 +1035,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -1242,7 +1220,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -1423,7 +1401,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -1606,7 +1584,7 @@
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="jakexchan">
       <meta itemprop="description" content="Life.code(" awesome")"="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
     </span>
 
     <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
@@ -1795,6 +1773,8 @@
       <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4" alt="jakexchan">
             
               <p class="site-author-name" itemprop="name">jakexchan</p>
               <p class="site-description motion-element" itemprop="description">Life.code("awesome")</p>
