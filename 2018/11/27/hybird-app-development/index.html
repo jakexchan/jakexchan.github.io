@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="bIUYcepuS1cTyq3CTMMr1hfA5qsg3WJXP0AiCdMaMVE">
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="true">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.2" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.2">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.2">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.2" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.4.2',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="前言为期两个半月的分销App一期开发任务在已进入了SIT测试阶段, 本文主要记录本次项目最开始的设计思路和一些项目中遇到问题的解决方法, 是对一期阶段性总结. 项目介绍分销App主要业务围绕着品牌商-服务商-零售商这条线展开的, 基于我司移动端底座的 Hybrid App 技术架构, Web 端是 vue 全家桶. 相较于之前的开发的轻应用有所不同的是, 在分销App中几乎所有的业务都是由 Web">
+<meta name="keywords" content="JavaScript,Vue,Hybird App">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hybird App多个轻应用工程开发实践">
+<meta property="og:url" content="http://yoursite.com/2018/11/27/hybird-app-development/index.html">
+<meta property="og:site_name" content="jakexchan">
+<meta property="og:description" content="前言为期两个半月的分销App一期开发任务在已进入了SIT测试阶段, 本文主要记录本次项目最开始的设计思路和一些项目中遇到问题的解决方法, 是对一期阶段性总结. 项目介绍分销App主要业务围绕着品牌商-服务商-零售商这条线展开的, 基于我司移动端底座的 Hybrid App 技术架构, Web 端是 vue 全家桶. 相较于之前的开发的轻应用有所不同的是, 在分销App中几乎所有的业务都是由 Web">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/11/27/hybird-app-development/app.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/27/hybird-app-development/module-app.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/27/hybird-app-development/module-app-relate.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/27/hybird-app-development/module-generate.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/27/hybird-app-development/header.jpg">
+<meta property="og:image" content="http://yoursite.com/2018/11/27/hybird-app-development/detail-before.gif">
+<meta property="og:image" content="http://yoursite.com/2018/11/27/hybird-app-development/detail-after.gif">
+<meta property="og:updated_time" content="2018-11-27T01:18:09.442Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hybird App多个轻应用工程开发实践">
+<meta name="twitter:description" content="前言为期两个半月的分销App一期开发任务在已进入了SIT测试阶段, 本文主要记录本次项目最开始的设计思路和一些项目中遇到问题的解决方法, 是对一期阶段性总结. 项目介绍分销App主要业务围绕着品牌商-服务商-零售商这条线展开的, 基于我司移动端底座的 Hybrid App 技术架构, Web 端是 vue 全家桶. 相较于之前的开发的轻应用有所不同的是, 在分销App中几乎所有的业务都是由 Web">
+<meta name="twitter:image" content="http://yoursite.com/2018/11/27/hybird-app-development/app.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/27/hybird-app-development/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Hybird App多个轻应用工程开发实践 | jakexchan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jakexchan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <h1 class="site-subtitle" itemprop="description">Web developer</h1>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/27/hybird-app-development/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jakexchan">
+      <meta itemprop="description" content="Life.code(" awesome")"="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jakexchan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Hybird App多个轻应用工程开发实践
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-11-27 09:03:11 / Modified: 09:18:09" itemprop="dateCreated datePublished" datetime="2018-11-27T09:03:11+08:00">2018-11-27</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Vue/" itemprop="url" rel="index"><span itemprop="name">Vue</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>为期两个半月的分销App一期开发任务在已进入了SIT测试阶段, 本文主要记录本次项目最开始的设计思路和一些项目中遇到问题的解决方法, 是对一期阶段性总结.</p>
+<h1 id="项目介绍"><a href="#项目介绍" class="headerlink" title="项目介绍"></a>项目介绍</h1><p>分销App主要业务围绕着品牌商-服务商-零售商这条线展开的, 基于我司移动端底座的 Hybrid App 技术架构, Web 端是 vue 全家桶.</p>
+<p>相较于之前的开发的轻应用有所不同的是, 在分销App中几乎所有的业务都是由 Web 开发完成, 包括了商城, 积分, 物流, 数据罗盘, 资讯等十几个轻应用组成. 客户端只提供登录, 底部tab 和工作台. </p>
+<p><img src="/2018/11/27/hybird-app-development/app.jpg" alt="App原型"></p>
+<a id="more"></a>
+<h1 id="应用模块化工程"><a href="#应用模块化工程" class="headerlink" title="应用模块化工程"></a>应用模块化工程</h1><p>我们本身有一个轻应用的脚手架模板工程, 提供了一些基础的功能, 已经应用于美信中多个H5轻应用. 然而对于分销App客户项目来说, 如果延续旧模式进行开发的话, 会面临着:</p>
+<ul>
+<li>十几个应用需要建十几个项目工程, 对应十几个 git repo, 代码管理复杂度.</li>
+<li>项目自身业务组件共享方式.</li>
+<li>基础功能根据项目定制化, 同步到各个应用的问题.</li>
+</ul>
+<p>基于上述的一些问题, 对原有的脚手架工程进行了一些改造, 主体思路:</p>
+<ul>
+<li>延续原有的 app 初始化功能</li>
+<li>不破坏性地修改原有的项目目录结构</li>
+<li>模块应用间的业务不耦合</li>
+<li>编写新的构建方式来完成当前需求</li>
+</ul>
+<p>整体的工程结构如下</p>
+<p><img src="/2018/11/27/hybird-app-development/module-app.jpg" alt="分销宝架构"></p>
+<p>在原有的项目工程下(也就是主工程), 增加了 <code>modules</code> 用于管理分销App的各个轻应用, 演变为:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">|- libraries</span><br><span class="line">|- modules</span><br><span class="line">||-- config</span><br><span class="line">||-- libraries</span><br><span class="line">||-- pages</span><br><span class="line">|||--- app</span><br><span class="line">||-- services</span><br><span class="line">||-- index.js</span><br><span class="line">|- pages</span><br><span class="line">||-- app.vue</span><br><span class="line">||-- error</span><br><span class="line">|- services</span><br><span class="line">|- main.js</span><br><span class="line">|- Module.js</span><br></pre></td></tr></table></figure>
+<p>主工程下:</p>
+<ul>
+<li><strong>libraries:</strong> 通用的基础库</li>
+<li><strong>modules:</strong> 模块应用代码</li>
+<li><strong>pages:</strong> 相关根组件和异常页面组件</li>
+<li><strong>services:</strong> 通用的基础服务</li>
+<li><strong>main.js:</strong> 主入口</li>
+<li><strong>Module.js:</strong> 当前使用的模块应用</li>
+</ul>
+<p><code>modules</code> 下:</p>
+<ul>
+<li><strong>config:</strong> 模块应用配置</li>
+<li><strong>libraries:</strong> 模块应用基础库</li>
+<li><strong>pages:</strong> 模块应用视图组件</li>
+<li><strong>services:</strong> 模块应用服务</li>
+<li><strong>index.js:</strong> 模块应用入口文件</li>
+</ul>
+<h2 id="模块应用与主工程"><a href="#模块应用与主工程" class="headerlink" title="模块应用与主工程"></a>模块应用与主工程</h2><h3 id="依赖关系"><a href="#依赖关系" class="headerlink" title="依赖关系"></a>依赖关系</h3><p><img src="/2018/11/27/hybird-app-development/module-app-relate.jpg" alt="模块与主工程依赖关系"></p>
+<p>对于SPA来说, 往往只有一个入口 <code>main.js</code>, 那么如何在主工程中构建某一个模块应用? 在这里通过动态生成 <code>module.js</code> 作为中介, 来暴露当前构建的模块应用.</p>
+<h3 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h3><p>假如有一个模块应用叫 <code>example</code>, 那么在 <code>modules</code> 下, 有:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">|-modules</span><br><span class="line">||--example</span><br><span class="line">|||---services</span><br><span class="line">||||----pages</span><br><span class="line">|||||-----app</span><br><span class="line">||||----http(接口配置)</span><br><span class="line">||||----i18n(国际化配置)</span><br><span class="line">||||----native(底座配置)</span><br><span class="line">||||----router(路由配置)</span><br><span class="line">||||----store(vuex配置)</span><br><span class="line">|||---index.js</span><br></pre></td></tr></table></figure>
+<ol>
+<li>在 <code>index.js</code> 中, 暴露一个方法 <code>bootstrap</code> 用于 <code>Vue</code> 实例化</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">'./pages/app'</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">'./service/router'</span></span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./service/vuex'</span></span><br><span class="line"><span class="keyword">import</span> i18n <span class="keyword">from</span> <span class="string">'./service/i18n'</span></span><br><span class="line"><span class="keyword">import</span> http <span class="keyword">from</span> <span class="string">'./service/http'</span></span><br><span class="line"><span class="keyword">import</span> native <span class="keyword">from</span> <span class="string">'./service/native'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bootstrap</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">/* eslint-disable no-new */</span></span><br><span class="line">  <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    router,</span><br><span class="line">    store,</span><br><span class="line">    i18n,</span><br><span class="line">    render: <span class="function"><span class="params">h</span> =&gt;</span> h(App)</span><br><span class="line">  &#125;).$mount(<span class="string">'#app'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  bootstrap,</span><br><span class="line">  router,</span><br><span class="line">  store,</span><br><span class="line">  i18n,</span><br><span class="line">  http,</span><br><span class="line">  native</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><code>module.js</code> 中, 引用当前构建的模块应用 <code>example</code></li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Module <span class="keyword">from</span> <span class="string">'@/modules/example'</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Module</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li><code>main.js</code> 中, 初始化 <code>Vue</code> 实例</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Module <span class="keyword">from</span> <span class="string">'./module</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">// Some code</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Module.bootstrap()</span></span><br></pre></td></tr></table></figure>
+<h3 id="动态生成-module-js"><a href="#动态生成-module-js" class="headerlink" title="动态生成 module.js"></a>动态生成 <code>module.js</code></h3><p>上面说到 <code>module.js</code> 是动态生成的, 用于让主工程感知当前构建的是哪个模块应用, 这里通过一个应用配置项和脚本搭建构建的环境.</p>
+<p><img src="/2018/11/27/hybird-app-development/module-generate.jpg" alt="动态生成module流程"></p>
+<h4 id="实现-1"><a href="#实现-1" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>在项目根目录中有一个 <code>build-config.json</code>, 用于配置所有模块应用的信息.</li>
+</ol>
+<p><code>build-config.json</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"modules"</span>: [</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="attr">"name"</span>: <span class="string">"example"</span>,</span><br><span class="line">      <span class="attr">"title"</span>: <span class="string">"示例模版"</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>搭建模块应用的构建环境: 通过 <code>npm script</code>, 执行一个 <code>bash</code> 脚本, 这个 <code>bash</code> 首先会读取 <code>build-config.json</code>, 把所有的模块应用信息打印在 Terminal 中, 用户选择一个要构建的模块应用, 然后执行一个任务生成 <code>module.js</code>, 最后就是 <code>webpack build</code> 的执行.</li>
+</ol>
+<ul>
+<li><p><code>package.json</code></p>
+  <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"build-module"</span>: <span class="string">"gulp build-module"</span>,</span><br><span class="line">    <span class="attr">"build:dev"</span>: <span class="string">"bash ./mx-libs/mx-build/build.sh build app-dev"</span>,</span><br><span class="line">    <span class="attr">"build:prod"</span>: <span class="string">"bash ./mx-libs/mx-build/build.sh build app-prod"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>build-module.js</code>: 生成 <code>module.js</code> 的脚本</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">buildModule</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> moduleNmae = process.env.VUE_APP_MODULE</span><br><span class="line">  <span class="keyword">if</span> (moduleNmae) &#123;</span><br><span class="line">    <span class="keyword">let</span> filePath = resolve(<span class="string">'src/module.js'</span>)</span><br><span class="line">    <span class="keyword">let</span> fileContent = <span class="string">`import Module from '@/modules/<span class="subst">$&#123;moduleNmae&#125;</span>'\nexport default Module\n`</span></span><br><span class="line">    writeCubeModule(filePath, fileContent)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'process.env.VUE_APP_MODULE'</span>, <span class="string">'没有找到'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>build.sh</code></p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 运行命令</span></span><br><span class="line">CMD=<span class="string">"<span class="variable">$1</span>"</span></span><br><span class="line"><span class="comment"># 运行环境</span></span><br><span class="line">ENV=<span class="string">"<span class="variable">$2</span>"</span></span><br><span class="line"><span class="comment"># 运行模块</span></span><br><span class="line">MOD=<span class="string">""</span></span><br><span class="line"><span class="comment"># 打包模块</span></span><br><span class="line">MDOULE_CMD=<span class="string">"npm run build-module"</span></span><br><span class="line"><span class="comment"># 启动服务</span></span><br><span class="line">SERVE_CMD=<span class="string">"npm run serve"</span></span><br><span class="line"><span class="comment"># 打包项目</span></span><br><span class="line">BUILD_CMD=<span class="string">"npm run build"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#---------------------------- 选择模块 --------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 模块选项</span></span><br><span class="line">MODULES=`grep <span class="string">'name'</span> build-config.json | awk -F<span class="string">':'</span> <span class="string">'&#123;print $NF&#125;'</span>`</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"请选择模块序号 :"</span></span><br><span class="line"></span><br><span class="line">select module <span class="keyword">in</span> <span class="variable">$MODULES</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  MOD=<span class="variable">$module</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> [[ <span class="string">"<span class="variable">$MOD</span>"</span>x = <span class="string">""</span>x ]];</span><br><span class="line">  <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"选择模块不存在"</span></span><br><span class="line">    <span class="built_in">exit</span></span><br><span class="line">  <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">break</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#---------------------------- 执行命令 --------------------</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"CMD: <span class="variable">$&#123;CMD&#125;</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"ENV: <span class="variable">$&#123;ENV&#125;</span>"</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">"MOD: <span class="variable">$&#123;MOD&#125;</span>"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$CMD</span>"</span>x = <span class="string">"serve"</span>x ]];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  cross-env VUE_APP_MODULE=<span class="variable">$&#123;MOD&#125;</span> VUE_APP_MX_ENV=<span class="variable">$&#123;ENV&#125;</span> <span class="variable">$MDOULE_CMD</span> &amp;&amp;</span><br><span class="line">  cross-env VUE_APP_MODULE=<span class="variable">$&#123;MOD&#125;</span> VUE_APP_MX_ENV=<span class="variable">$&#123;ENV&#125;</span> <span class="variable">$SERVE_CMD</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> [[ <span class="string">"<span class="variable">$CMD</span>"</span>x = <span class="string">"build"</span>x ]];</span><br><span class="line"><span class="keyword">then</span></span><br><span class="line">  cross-env VUE_APP_MODULE=<span class="variable">$&#123;MOD&#125;</span> VUE_APP_MX_ENV=<span class="variable">$&#123;ENV&#125;</span> <span class="variable">$MDOULE_CMD</span> &amp;&amp;</span><br><span class="line">  cross-env VUE_APP_MODULE=<span class="variable">$&#123;MOD&#125;</span> VUE_APP_MX_ENV=<span class="variable">$&#123;ENV&#125;</span> <span class="variable">$BUILD_CMD</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="组件优化"><a href="#组件优化" class="headerlink" title="组件优化"></a>组件优化</h2><h3 id="Header-组件优化"><a href="#Header-组件优化" class="headerlink" title="Header 组件优化"></a>Header 组件优化</h3><p>在基础组件库中有同事之前写的页面头部组件 <code>c-header</code>, 对于 header 右侧只提供了菜单栏的选择, 然而在分销App中有一些场景右侧需要渲染搜索按钮或提交按钮等等, 原有的 <code>c-header</code> 组件无法满足需求, 因此对该组件进行优化, 步骤为:</p>
+<ol>
+<li>抽取原有的右侧下拉菜单为独立的组件 <code>c-dropdown</code></li>
+<li>保留原有的 <code>c-header</code> 接口设计, 增加一个渲染函数 <code>rightRender</code> 的参数.</li>
+</ol>
+<p><img src="/2018/11/27/hybird-app-development/header.jpg" alt="header优化"></p>
+<p>代码实现:</p>
+<p><code>c-header</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: &#123;</span><br><span class="line">    rightRender: &#123;</span><br><span class="line">      type: <span class="built_in">Function</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  render (h) &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;header&gt;</span><br><span class="line">        <span class="comment">// some code</span></span><br><span class="line">        <span class="comment">/* 右侧容器 */</span></span><br><span class="line">        &lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"c-header-right"</span>&gt;</span><br><span class="line">          &#123; <span class="keyword">this</span>.rightRender.call(<span class="keyword">this</span>) &#125;</span><br><span class="line">        &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        /</span>* 右侧容器 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">      &lt;/</span>header&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;c-header right-render=<span class="string">"rightRender"</span>&gt;&lt;/c-header&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">export default &#123;</span></span><br><span class="line"><span class="regexp">  methods: &#123;</span></span><br><span class="line"><span class="regexp">    rightRender () &#123;</span></span><br><span class="line"><span class="regexp">      return (</span></span><br><span class="line"><span class="regexp">        &lt;span&gt;提交&lt;/</span>span&gt;</span><br><span class="line">      )</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="图片和视频选择组件优化"><a href="#图片和视频选择组件优化" class="headerlink" title="图片和视频选择组件优化"></a>图片和视频选择组件优化</h3><p>图片选择和视频选择需要调用底座cordova, 对于页面交互逻辑大致是一样的, 图片提供拍照和相册获取, 视频提供录制和相册获取. 在基础库中只提供了图片相关的组件, 视频需要重新开发.</p>
+<p>原有的图片选择组件通过 <code>actionSheet</code> 进行选择不同来源的图片, 为了达到更多的场景的复用效果, 例如点击头像进行拍照上传等等, 主要的思路有:</p>
+<ol>
+<li>拆分 <code>actionSheet</code> UI交互逻辑和底座cordova逻辑</li>
+<li>对于上层组件, 通过引用UI组件和 <code>mixin</code> 底座接口进行一层封装</li>
+<li>对于底座逻辑公共接口逻辑复用</li>
+</ol>
+<p>优化后这个模块的目录结构为:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">|- native-camera</span><br><span class="line">||-- service</span><br><span class="line">|||--- base.js(基类)</span><br><span class="line">|||--- picture.js(图片与底座逻辑)</span><br><span class="line">|||--- video.js(视频与底座逻辑)</span><br><span class="line">||-- camera.js(camera插件配置常量值)</span><br><span class="line">||-- index.js(模块暴露文件)</span><br><span class="line">||-- index.vue(UI逻辑)</span><br></pre></td></tr></table></figure>
+<p><code>base.js</code> 为公共的接口配置和一些逻辑复用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: &#123;</span><br><span class="line">    list: &#123;</span><br><span class="line">      type: <span class="built_in">Array</span>,</span><br><span class="line">      <span class="keyword">default</span>: <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> []</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    max: &#123;</span><br><span class="line">      type: <span class="built_in">Number</span>,</span><br><span class="line">      <span class="keyword">default</span>: <span class="number">9</span></span><br><span class="line">    &#125;,</span><br><span class="line">    ...</span><br><span class="line">  &#125;,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    btnVisible () &#123;</span><br><span class="line">      <span class="comment">// some code</span></span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于 <code>picture.js</code> 和 <code>video.js</code>, 通过 <code>extends</code> 引入 <code>base</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Base <span class="keyword">from</span> <span class="string">'./base'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  extends: Base</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>对于上层组件, 例如添加图片组件 <code>c-picture</code>, 需要引入UI组件和逻辑组件</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    <span class="comment">// some code</span></span><br><span class="line">    &lt;native-camera :options=<span class="string">"menus"</span>&gt;&lt;/native-camera&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;<span class="regexp">/template&gt;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">&lt;script&gt;</span></span><br><span class="line"><span class="regexp">import &#123; NativeCamera, PirtureService &#125; from 'native-camera'</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default &#123;</span></span><br><span class="line"><span class="regexp">  mixins: [PirtureService],</span></span><br><span class="line"><span class="regexp">  components: &#123;</span></span><br><span class="line"><span class="regexp">    NativeCamera</span></span><br><span class="line"><span class="regexp">  &#125;,</span></span><br><span class="line"><span class="regexp">  data () &#123;</span></span><br><span class="line"><span class="regexp">    return &#123;</span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ actionSheet值</span></span><br><span class="line"><span class="regexp">      menus: []</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp">&lt;/</span>script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="商品详情优化"><a href="#商品详情优化" class="headerlink" title="商品详情优化"></a>商品详情优化</h3><p>接口请求封装了统一的loading, 然而在商品详情中, 接口返回在涉及到查询复杂的情况下时间很长, 导致全局的loading体验不好, 对于这种情况, 和后端同事讨论之后, 把接口进行拆分为基础信息一块, 规格和价钱和活动等一块, 详情信息一块.</p>
+<p>通过配置关闭默认的loading, 通过引入三段页面骨架(skeleton)组件的方式, 优化了整体的交互体验.</p>
+<p>优化前</p>
+<p><img src="/2018/11/27/hybird-app-development/detail-before.gif" alt="优化前.gif"></p>
+<p>优化后</p>
+<p><img src="/2018/11/27/hybird-app-development/detail-after.gif" alt="优化后.gif"></p>
+<h2 id="开发规范"><a href="#开发规范" class="headerlink" title="开发规范"></a>开发规范</h2><ul>
+<li>强制开启 <code>eslint</code></li>
+<li>组件风格参考<a href="https://cn.vuejs.org/v2/style-guide/" target="_blank" rel="noopener">官方风格</a></li>
+<li>git commit 参考 <a href="https://github.com/commitizen/cz-cli" target="_blank" rel="noopener">commitizen</a>, 规范 scope 为哪个应用模块, 例如:<br>  <code>feat(积分商品): 完成积分商品商品列表开发</code></li>
+</ul>
+<h1 id="一些其它的想法"><a href="#一些其它的想法" class="headerlink" title="一些其它的想法"></a>一些其它的想法</h1><p>目前产品研发和项目实施而言, 开发流程往往为标准化产品开分支给项目实施进行定制化, 或者直接 clone 代码之后另起 git repo, 对于客户来说, 一般会出现需要A应用定制化, B应用跟着产品迭代更新, 这中间的过程都是通过人为去进行管理的.</p>
+<p>我和后端的同事讨论过, 他们每个人负责着几个服务, 通过 devops 选择需要的功能模块服务进行构建. 由此我也有个想法, 能否通过本次项目这种方式, 将主工程的一些逻辑插件化, 每个应用模块独立, 通过 git submodule 或者 npm private 的方式, 用 <code>cli</code> 封装这一部分的操作, 对于项目定制化, 锁死某个 tag 版本.</p>
+<p>这个想法已经跟团队的同事分享了, 后面还需要进一步讨论和demo的实践之后摸索出更多的可行性.</p>
+<h1 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h1><p>本文主要是对分销app的一次阶段性总结, 有项目功能的思路, 一些常用的组件优化方法和规范以及对未来进一步实践的想法, 总体来说收获还是比较大的, 无论是在任务的分配, 代码编写, 还是带团队开发方面都是宝贵的经历.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+            <a href="/tags/Vue/" rel="tag"># Vue</a>
+          
+            <a href="/tags/Hybird-App/" rel="tag"># Hybird App</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/26/vue-router-history-and-nginx/" rel="next" title="vue-router history 模式与 nginx 配置">
+                <i class="fa fa-chevron-left"></i> vue-router history 模式与 nginx 配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://avatars2.githubusercontent.com/u/12413643?s=460&v=4" alt="jakexchan">
+            
+              <p class="site-author-name" itemprop="name">jakexchan</p>
+              <p class="site-description motion-element" itemprop="description">Life.code("awesome")</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">8</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/jakexchan" target="_blank" title="Github" rel="external nofollow"><i class="fa fa-fw fa-github"></i></a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:kabessc@outlook.com" target="_blank" title="E-Mail" rel="external nofollow"><i class="fa fa-fw fa-envelope"></i></a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#项目介绍"><span class="nav-number">2.</span> <span class="nav-text">项目介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#应用模块化工程"><span class="nav-number">3.</span> <span class="nav-text">应用模块化工程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#模块应用与主工程"><span class="nav-number">3.1.</span> <span class="nav-text">模块应用与主工程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖关系"><span class="nav-number">3.1.1.</span> <span class="nav-text">依赖关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现"><span class="nav-number">3.1.2.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态生成-module-js"><span class="nav-number">3.1.3.</span> <span class="nav-text">动态生成 module.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#实现-1"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件优化"><span class="nav-number">3.2.</span> <span class="nav-text">组件优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Header-组件优化"><span class="nav-number">3.2.1.</span> <span class="nav-text">Header 组件优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图片和视频选择组件优化"><span class="nav-number">3.2.2.</span> <span class="nav-text">图片和视频选择组件优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#商品详情优化"><span class="nav-number">3.2.3.</span> <span class="nav-text">商品详情优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发规范"><span class="nav-number">3.3.</span> <span class="nav-text">开发规范</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些其它的想法"><span class="nav-number">4.</span> <span class="nav-text">一些其它的想法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#最后"><span class="nav-number">5.</span> <span class="nav-text">最后</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright"> &copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jakexchan</span>
+
+  
+
+  
+</div>
+
+
+  
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" rel="external nofollow" href="https://hexo.io">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" rel="external nofollow" href="https://theme-next.org">NexT.Muse</a> v6.4.2</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.2"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
